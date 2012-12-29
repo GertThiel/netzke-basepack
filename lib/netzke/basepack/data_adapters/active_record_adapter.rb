@@ -74,12 +74,22 @@ module Netzke::Basepack::DataAdapters
           relation = relation.send(column[:sorting_scope].to_sym, dir.to_sym)
         else
           relation = if method.nil?
+            # To allow sorting virtual columns w/o requiring an additional
+            # scope support overwriting the table field by which the records
+            # shall be sorted
+            assoc = column[:sort_with] if column.has_key?(:sort_with)
+
             # Quote the SQL fragment properly
             table = @model_class.connection.quote_table_name  @model_class.table_name
             field = @model_class.connection.quote_column_name assoc
 
             relation.order("#{table}.#{field} #{dir}")
           else
+            # To allow sorting virtual columns w/o requiring an additional
+            # scope support overwriting the table field by which the records
+            # shall be sorted
+            method = column[:sort_with] if column.has_key?(:sort_with)
+
             # Quote the SQL fragment properly
             table = @model_class.connection.quote_table_name  assoc.klass.table_name
             field = @model_class.connection.quote_column_name method
