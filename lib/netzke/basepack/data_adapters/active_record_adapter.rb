@@ -66,18 +66,26 @@ module Netzke::Basepack::DataAdapters
       # apply sorting if needed
       if params[:sort] && sort_params = params[:sort].first
         assoc, method = sort_params["property"].split('__')
-        dir = sort_params["direction"].downcase
+        dir = sort_params["direction"].upcase
 
-        # if a sorting scope is set, call the scope with the given direction
         column = columns.detect { |c| c[:name] == sort_params["property"] }
         if column.has_key?(:sorting_scope)
+          # if a sorting scope is set, call the scope with the given direction
           relation = relation.send(column[:sorting_scope].to_sym, dir.to_sym)
         else
           relation = if method.nil?
-            relation.order("#{@model_class.table_name}.#{assoc} #{dir}")
+            # Quote the SQL fragment properly
+            table = @model_class.connection.quote_table_name  @model_class.table_name
+            field = @model_class.connection.quote_column_name assoc
+
+            relation.order("#{table}.#{field} #{dir}")
           else
+            # Quote the SQL fragment properly
+            table = @model_class.connection.quote_table_name  assoc.klass.table_name
+            field = @model_class.connection.quote_column_name method
+
             assoc = @model_class.reflect_on_association(assoc.to_sym)
-            relation.joins(assoc.name).order("#{assoc.klass.table_name}.#{method} #{dir}")
+            relation.joins(assoc.name).order("#{table}.#{field} #{dir}")
           end
         end
       end
