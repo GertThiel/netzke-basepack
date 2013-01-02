@@ -10,8 +10,7 @@ module Netzke
           when "String" # SQL query or SQL query with params (e.g. ["created_at < ?", 1.day.ago])
             params.empty? ? self.where(scope) : self.where([scope, *params])
           when "Array"
-            first_scope = scope.shift
-            scope.empty? ? self.extend_with(first_scope) : self.extend_with(first_scope).extend_with(scope)
+            self.extend_with(*scope)
           when "Hash"  # conditions hash
             self.where(scope)
           when "ActiveSupport::HashWithIndifferentAccess" # conditions hash
