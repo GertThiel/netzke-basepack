@@ -335,7 +335,15 @@ module Netzke::Basepack::DataAdapters
 
       relation = relation.where(predicates)
 
-      relation = relation.extend_with(params[:scope]) if params[:scope]
+      relation = if params[:scopes] && params[:scopes].is_a?(Array)
+                   params[:scopes].each do |scope|
+                     relation = relation.extend_with(scope)
+                   end
+
+                   relation
+                 elsif params[:scope]
+                   relation.extend_with(params[:scope])
+                 end
 
       relation
     end

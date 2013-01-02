@@ -159,14 +159,16 @@ module Netzke
 
         # Returns an array of records.
         def get_records(params)
-          params[:limit] = config[:rows_per_page] if config[:enable_pagination]
-          params[:scope] = config[:scope] # note, params[:scope] becomes ActiveSupport::HashWithIndifferentAccess
+          params[:limit]  = config[:rows_per_page] if config[:enable_pagination]
+          params[:scope]  = config[:scope]  # note, params[:scope] becomes ActiveSupport::HashWithIndifferentAccess
+          params[:scopes] = config[:scopes] # note, params[:scope] becomes ActiveSupport::HashWithIndifferentAccess
 
           data_adapter.get_records(params, final_columns)
         end
 
         def count_records(params)
-          params[:scope] = config[:scope] # note, params[:scope] becomes ActiveSupport::HashWithIndifferentAccess
+          params[:scope]  = config[:scope]  # note, params[:scope] becomes ActiveSupport::HashWithIndifferentAccess
+          params[:scopes] = config[:scopes] # note, params[:scope] becomes ActiveSupport::HashWithIndifferentAccess
 
           data_adapter.count_records(params, final_columns)
         end
