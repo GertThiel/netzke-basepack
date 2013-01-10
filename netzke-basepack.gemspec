@@ -5,11 +5,11 @@
 
 Gem::Specification.new do |s|
   s.name = "netzke-basepack"
-  s.version = "0.8.1"
+  s.version = "0.8.2"
 
   s.required_rubygems_version = Gem::Requirement.new(">= 0") if s.respond_to? :required_rubygems_version=
   s.authors = ["nomadcoder"]
-  s.date = "2013-01-05"
+  s.date = "2013-01-10"
   s.description = "A set of feature-rich extendible Netzke components (such as Form, Grid, Window, TabPanel, etc) which can be used as building block for your RIA"
   s.email = "nmcoder@gmail.com"
   s.extra_rdoc_files = [
@@ -33,6 +33,8 @@ Gem::Specification.new do |s|
     "lib/netzke-basepack.rb",
     "lib/netzke/basepack.rb",
     "lib/netzke/basepack/accordion.rb",
+    "lib/netzke/basepack/action_column.rb",
+    "lib/netzke/basepack/action_column/javascripts/action_column.js",
     "lib/netzke/basepack/active_record.rb",
     "lib/netzke/basepack/active_record/relation_extensions.rb",
     "lib/netzke/basepack/column_config.rb",
@@ -83,7 +85,6 @@ Gem::Specification.new do |s|
     "netzke-basepack.gemspec",
     "stylesheets/basepack.css",
     "stylesheets/datetimefield.css",
-    "test/basepack_test_app/.gitignore",
     "test/basepack_test_app/.rspec",
     "test/basepack_test_app/Gemfile",
     "test/basepack_test_app/Gemfile.lock",
@@ -122,6 +123,7 @@ Gem::Specification.new do |s|
     "test/basepack_test_app/app/components/double_book_grid.rb",
     "test/basepack_test_app/app/components/extras/book_presentation.rb",
     "test/basepack_test_app/app/components/form_without_model.rb",
+    "test/basepack_test_app/app/components/grid_with_action_column.rb",
     "test/basepack_test_app/app/components/grid_with_custom_filter.rb",
     "test/basepack_test_app/app/components/grid_with_initial_sorting.rb",
     "test/basepack_test_app/app/components/grid_with_inline_data.rb",
@@ -166,6 +168,7 @@ Gem::Specification.new do |s|
     "test/basepack_test_app/config/application.rb",
     "test/basepack_test_app/config/boot.rb",
     "test/basepack_test_app/config/cucumber.yml",
+    "test/basepack_test_app/config/database.yml",
     "test/basepack_test_app/config/database.yml.sample",
     "test/basepack_test_app/config/database.yml.travis",
     "test/basepack_test_app/config/environment.rb",
@@ -204,6 +207,7 @@ Gem::Specification.new do |s|
     "test/basepack_test_app/features/grid.feature",
     "test/basepack_test_app/features/grid_filters.feature",
     "test/basepack_test_app/features/grid_sorting.feature",
+    "test/basepack_test_app/features/grid_with_action_column.feature",
     "test/basepack_test_app/features/grid_with_custom_primary_key.feature",
     "test/basepack_test_app/features/i18n.feature",
     "test/basepack_test_app/features/nested_attributes.feature",
@@ -212,6 +216,7 @@ Gem::Specification.new do |s|
     "test/basepack_test_app/features/search_in_grid.feature",
     "test/basepack_test_app/features/simple_app.feature",
     "test/basepack_test_app/features/step_definitions/accordion_steps.rb",
+    "test/basepack_test_app/features/step_definitions/action_column_steps.rb",
     "test/basepack_test_app/features/step_definitions/ext_steps.rb",
     "test/basepack_test_app/features/step_definitions/form_panel_steps.rb",
     "test/basepack_test_app/features/step_definitions/generic_steps.rb",
