@@ -342,6 +342,8 @@ module Netzke::Basepack::DataAdapters
                    relation
                  elsif params[:scope]
                    relation.extend_with(params[:scope])
+                 else
+                   relation
                  end
 
       relation
