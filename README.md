@@ -1,4 +1,4 @@
-# Netzke Basepack [![Build Status](https://secure.travis-ci.org/nomadcoder/netzke-basepack.png?branch=master)](http://travis-ci.org/nomadcoder/netzke-basepack) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/netzke/netzke-basepack)
+# Netzke Basepack [![Gem Version](https://badge.fury.io/rb/netzke-basepack.png)](http://badge.fury.io/rb/netzke-basepack) [![Build Status](https://secure.travis-ci.org/netzke/netzke-basepack.png?branch=master)](http://travis-ci.org/netzke/netzke-basepack) [![Code Climate](https://codeclimate.com/badge.png)](https://codeclimate.com/github/netzke/netzke-basepack)
 
 [RDocs](http://rdoc.info/github/netzke/netzke-basepack)
 
@@ -15,8 +15,6 @@ Basepack includes the following components:
 * [Window](http://rdoc.info/github/netzke/netzke-basepack/Netzke/Basepack/Window) - a window which stores its size, position, and maximized state
 
 Besides, Basepack implements persistence of region sizes and collapsed states of an arbitrary component that uses [border layout](http://docs.sencha.com/ext-js/4-1/#!/api/Ext.layout.container.Border) (see [ItemPersistence](http://rdoc.info/github/netzke/netzke-basepack/Netzke/Basepack/ItemPersistence)).
-
-For more pre-built components refer to [Netzke Community-pack](https://github.com/netzke/netzke-communitypack).
 
 ## Requirements
 
@@ -60,13 +58,13 @@ Also, you can see the list of test components on the index page (along with link
 
     http://localhost:3000/
 
-For cucumber tests (from `test/basepack_test_app`):
+To run all the tests (from the gem's root):
 
-    $ cucumber features
+    $ rake
 
-For specs (from `test/basepack_test_app`):
+This assumes that the Ext JS library is located/symlinked in `test/core_test_app/public/extjs`.
 
-    $ rspec spec
+*Sourcing Ext JS files from Sencha CDN is broken in Basepack atm*.
 
 ## Using ORM other than ActiveRecord
 
