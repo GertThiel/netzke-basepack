@@ -67,6 +67,7 @@ module Netzke::Basepack::DataAdapters
 
           relation = relation.preload(assoc.name.to_sym)
           relation = relation.select(assoc.foreign_key.to_sym)
+          relation = relation.select(assoc.foreign_type.to_sym) if assoc.options[:polymorphic]
         end
       end
 
