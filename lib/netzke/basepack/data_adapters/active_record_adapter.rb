@@ -1,3 +1,5 @@
+require 'squeel'
+
 module Netzke::Basepack::DataAdapters
   # Implementation of Netzke::Basepack::DataAdapters::AbstractAdapter
   class ActiveRecordAdapter < AbstractAdapter
@@ -100,7 +102,12 @@ module Netzke::Basepack::DataAdapters
             table = @model_class.connection.quote_table_name  assoc.klass.table_name
             field = @model_class.connection.quote_column_name method
 
-            relation.joins(assoc.name).order("#{table}.#{field} #{dir}")
+            # Eval is evil but this is only way I know right now how to
+            # include an LEFT OUTER JOIN that does not break on complex
+            # queries. This depends on Squeel.
+            eval <<-RB
+              relation.joins{ #{assoc.name}.outer }.order('#{table}.#{field} #{dir}')
+            RB
           end
         end
       end

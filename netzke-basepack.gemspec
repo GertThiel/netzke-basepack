@@ -14,6 +14,7 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
 
   s.add_dependency 'netzke-core', '~> 0.8.2'
+  s.add_dependency 'squeel'
 
   s.add_development_dependency 'factory_girl'
   s.add_development_dependency 'pickle'
