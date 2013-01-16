@@ -58,6 +58,10 @@ module Netzke::Basepack::DataAdapters
       # build initial relation based on passed params
       relation = get_relation(params)
 
+      # If no one has chosen which fields shall be loaded we must select all
+      # fields before addressing the n+1 query problem
+      relation = relation.select( attribute_names.map(&:to_sym) ) if relation.select_values.empty?
+
       # addressing the n+1 query problem and avoid the
       # "Eager loading with 'includes' overrides 'select' in SQL query" trap
       columns.each do |c|
