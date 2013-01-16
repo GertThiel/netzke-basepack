@@ -87,13 +87,13 @@ module Netzke::Basepack::DataAdapters
             # To allow sorting virtual columns w/o requiring an additional
             # scope support overwriting the table field by which the records
             # shall be sorted
+            assoc  = @model_class.reflect_on_association(assoc.to_sym)
             method = column[:sort_with] if column.has_key?(:sort_with)
 
             # Quote the SQL fragment properly
             table = @model_class.connection.quote_table_name  assoc.klass.table_name
             field = @model_class.connection.quote_column_name method
 
-            assoc = @model_class.reflect_on_association(assoc.to_sym)
             relation.joins(assoc.name).order("#{table}.#{field} #{dir}")
           end
         end
