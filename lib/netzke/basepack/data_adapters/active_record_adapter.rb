@@ -56,10 +56,16 @@ module Netzke::Basepack::DataAdapters
       # build initial relation based on passed params
       relation = get_relation(params)
 
-      # addressing the n+1 query problem
+      # addressing the n+1 query problem and avoid the
+      # "Eager loading with 'includes' overrides 'select' in SQL query" trap
       columns.each do |c|
         assoc, method = c[:name].split('__')
-        relation = relation.includes(assoc.to_sym) if method
+        if method
+          assoc = @model_class.reflect_on_association(assoc.to_sym)
+
+          relation = relation.preload(assoc.name.to_sym)
+          relation = relation.select(assoc.foreign_key.to_sym)
+        end
       end
 
       # apply sorting if needed
