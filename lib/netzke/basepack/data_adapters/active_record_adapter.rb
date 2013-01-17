@@ -420,15 +420,44 @@ module Netzke::Basepack::DataAdapters
         end
         case v["type"]
         when "string"
-          res = res.where(["#{field} like ?", "%#{value}%"])
+          if method && assoc && !assoc.options[:polymorphic]
+            eval <<-RB
+              res = res.joins{ #{assoc.name}.outer }.
+                          where{ #{assoc.name}.#{method}.like "%#{value}%" }
+            RB
+          else
+            res = res.where(["#{field} like ?", "%#{value}%"])
+          end
         when "date"
           # convert value to the DB date
           value.match /(\d\d)\/(\d\d)\/(\d\d\d\d)/
-          res = res.where("#{field} #{op} ?", "#{$3}-#{$1}-#{$2}".to_time)
+
+          if method && assoc && !assoc.options[:polymorphic]
+            eval <<-RB
+              res = res.joins{ #{assoc.name}.outer }.
+                          where{ #{assoc.name}.#{method}.#{v['comparison']} "#{ "#{$3}-#{$1}-#{$2}".to_time }" }
+            RB
+          else
+            res = res.where("#{field} #{op} ?", "#{$3}-#{$1}-#{$2}".to_time)
+          end
         when "numeric"
-          res = res.where(["#{field} #{op} ?", value])
+          if method && assoc && !assoc.options[:polymorphic]
+            eval <<-RB
+              res = res.joins{ #{assoc.name}.outer }.
+                          where{ #{assoc.name}.#{method}.#{v['comparison']} "#{value}" }
+            RB
+          else
+            res = res.where(["#{field} #{op} ?", value])
+          end
         else
-          res = res.where(["#{field} = ?", value])
+          if method && assoc && !assoc.options[:polymorphic]
+            eval <<-RB
+              res = res.joins{ #{assoc.name}.outer }.
+                          where{ #{assoc.name}.#{method}.eq "#{value}" }
+            RB
+          else
+            res = res.where(["#{field} = ?", value])
+          end
         end
       end
 
