@@ -432,7 +432,9 @@ module Netzke::Basepack::DataAdapters
                           where{ #{assoc.name}.#{method}.like "%#{value}%" }
             RB
           else
-            res = res.where(["#{field} like ?", "%#{value}%"])
+            eval <<-RB
+              res = res.where{ #{field}.like "%#{value}%" }
+            RB
           end
         when "date"
           # convert value to the DB date
@@ -444,7 +446,9 @@ module Netzke::Basepack::DataAdapters
                           where{ #{assoc.name}.#{method}.#{v['comparison']} "#{ "#{$3}-#{$1}-#{$2}".to_time }" }
             RB
           else
-            res = res.where("#{field} #{op} ?", "#{$3}-#{$1}-#{$2}".to_time)
+            eval <<-RB
+              res = res.where{ #{field}.#{v['comparison']} "#{ "#{$3}-#{$1}-#{$2}".to_time }" }
+            RB
           end
         when "numeric"
           if method && assoc && !assoc.options[:polymorphic]
@@ -453,7 +457,9 @@ module Netzke::Basepack::DataAdapters
                           where{ #{assoc.name}.#{method}.#{v['comparison']} "#{value}" }
             RB
           else
-            res = res.where(["#{field} #{op} ?", value])
+            eval <<-RB
+              res = res.where{ #{field}.#{v['comparison']} "#{value}" }
+            RB
           end
         else
           if method && assoc && !assoc.options[:polymorphic]
@@ -462,7 +468,9 @@ module Netzke::Basepack::DataAdapters
                           where{ #{assoc.name}.#{method}.eq "#{value}" }
             RB
           else
-            res = res.where(["#{field} = ?", value])
+            eval <<-RB
+              res = res.where{ #{field}.eq "#{value}" }
+            RB
           end
         end
       end
