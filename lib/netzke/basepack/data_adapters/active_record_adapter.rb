@@ -391,9 +391,15 @@ module Netzke::Basepack::DataAdapters
       operator_map = {"lt" => "<", "gt" => ">", "eq" => "="}
 
       # these are still JSON-encoded due to the migration to Ext.direct
-      column_filter=JSON.parse(column_filter)
+      column_filter = JSON.parse(column_filter) if column_filter.is_a?(String)
       column_filter.each do |v|
-        assoc, method = v["field"].split('__')
+        filtered_field = if v['field'].present?
+                           v['field']
+                         elsif v['property'].present?
+                           v['property']
+                         end
+        assoc, method  = filtered_field.split('__')
+
         if method
           assoc = @model_class.reflect_on_association(assoc.to_sym)
           if assoc.klass.column_names.include? method
@@ -408,7 +414,7 @@ module Netzke::Basepack::DataAdapters
         op = operator_map[v['comparison']]
 
         col_filter = @cls.inject(nil) { |fil, col|
-          if col.is_a?(Hash) && col[:filter_with] && col[:name].to_sym == v['field'].to_sym
+          if col.is_a?(Hash) && col[:filter_with] && col[:name].to_sym == filtered_field.to_sym
             fil = col[:filter_with]
           end
           fil
