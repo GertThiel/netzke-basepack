@@ -439,16 +439,32 @@ module Netzke::Basepack::DataAdapters
         when "date"
           # convert value to the DB date
           value.match /(\d\d)\/(\d\d)\/(\d\d\d\d)/
+          date_value = "#{$3}-#{$1}-#{$2}"
 
-          if method && assoc && !assoc.options[:polymorphic]
-            eval <<-RB
-              res = res.joins{ #{assoc.name}.outer }.
-                          where{ #{assoc.name}.#{method}.#{v['comparison']} "#{ "#{$3}-#{$1}-#{$2}".to_time }" }
-            RB
+          # To support filtering _on_ a specified day, both field and value
+          # must be casted to dates
+          if @model_class.connection.adapter_name.downcase =~ /postgresql/
+            if method && assoc && !assoc.options[:polymorphic]
+              eval <<-RB
+                res = res.joins{ #{assoc.name}.outer }.
+                            where{ date_trunc('day', #{assoc.name}.#{method}).#{v['comparison']} date_trunc('day', to_timestamp('#{ date_value }', 'YYYY-MM-DD')) }
+              RB
+            else
+              eval <<-RB
+                res = res.where{ date_trunc('day', #{field}).#{v['comparison']} date_trunc('day', to_timestamp('#{ date_value }', 'YYYY-MM-DD')) }
+              RB
+            end
           else
-            eval <<-RB
-              res = res.where{ #{field}.#{v['comparison']} "#{ "#{$3}-#{$1}-#{$2}".to_time }" }
-            RB
+            if method && assoc && !assoc.options[:polymorphic]
+              eval <<-RB
+                res = res.joins{ #{assoc.name}.outer }.
+                            where{ #{assoc.name}.#{method}.#{v['comparison']} "#{ date_value.to_time }" }
+              RB
+            else
+              eval <<-RB
+                res = res.where{ #{field}.#{v['comparison']} "#{ date_value.to_time }" }
+              RB
+            end
           end
         when "numeric"
           if method && assoc && !assoc.options[:polymorphic]
