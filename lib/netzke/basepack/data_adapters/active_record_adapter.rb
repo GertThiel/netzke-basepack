@@ -73,8 +73,16 @@ module Netzke::Basepack::DataAdapters
 
         column = columns.detect { |c| c[:name] == sort_params["property"] }
         if column.has_key?(:sorting_scope)
-          # if a sorting scope is set, call the scope with the given direction
-          relation = relation.send(column[:sorting_scope].to_sym, dir.to_sym)
+          # if a sorting scope is set, call the scope with optional parameters
+          # and the sorting direction
+          if column[:sorting_scope].is_a?(Array) && column[:sorting_scope].length > 1
+            sorting_scope = column[:sorting_scope][0]
+            scope_args    = column[:sorting_scope][1..-1]
+            scope_args    = [*scope_args, dir.to_sym]
+            relation = relation.send(sorting_scope, *scope_args)
+          else
+            relation = relation.send(column[:sorting_scope].to_sym, dir.to_sym)
+          end
         else
           relation = if method.nil?
             # To allow sorting virtual columns w/o requiring an additional
