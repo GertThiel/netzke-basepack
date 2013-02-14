@@ -264,7 +264,7 @@ module Netzke::Basepack::DataAdapters
             if r.respond_to?(m)
               r.send(m)
             else
-              logger.debug "Netzke::Basepack: Wrong attribute name: #{a[:name]}" unless r.nil?
+              Rails.logger.debug "Netzke::Basepack: Wrong attribute name: #{a[:name]}" unless r.nil?
               nil
             end
           end
@@ -315,10 +315,10 @@ module Netzke::Basepack::DataAdapters
                 r.send("#{assoc.foreign_key}=", v.to_i < 0 ? nil : v) if attribute_mass_assignable?(assoc.foreign_key, role)
               end
             else
-              logger.debug "Netzke::Basepack: Association #{assoc} is not known for class #{@data_class}"
+              Rails.logger.debug "Netzke::Basepack: Association #{assoc} is not known for class #{@data_class}"
             end
           else
-            logger.debug "Netzke::Basepack: Wrong attribute name: #{a[:name]}"
+            Rails.logger.debug "Netzke::Basepack: Wrong attribute name: #{a[:name]}"
           end
         end
       end
