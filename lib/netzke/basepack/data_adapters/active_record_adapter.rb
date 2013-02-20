@@ -67,9 +67,9 @@ module Netzke::Basepack::DataAdapters
       end
 
       # apply sorting if needed
-      if params[:sort] && sort_params = params[:sort].first
+      params[:sort].each do |sort_params|
         assoc, method = sort_params["property"].split('__')
-        dir = sort_params["direction"].upcase
+        dir = sort_params["direction"].try(:upcase) || 'ASC'
 
         column = columns.detect { |c| c[:name] == sort_params["property"] }
         if column.has_key?(:sorting_scope)
