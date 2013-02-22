@@ -7,6 +7,7 @@ module Netzke
         virtual: false,
         sortable: true,
         filterable: true,
+        groupable: true,
         width: 100,
         hidden: false,
         assoc: false
@@ -32,6 +33,12 @@ module Netzke
         self.sortable = !virtual || !sorting_scope.nil? if sortable.nil?
 
         self.filterable = !virtual || !filter_with.nil? if filterable.nil?
+
+        # Disable grouping by default. This is actually to restrictive.
+        # The only trouble maker I know of are polymorphic associations.
+        # But I do not know how to identify these here.
+        # :datetime columns are an other case because of their granularity.
+        self.groupable = false if groupable.nil?
 
         self.assoc = association? # used at the JS side
 
