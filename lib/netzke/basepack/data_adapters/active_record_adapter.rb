@@ -66,8 +66,10 @@ module Netzke::Basepack::DataAdapters
         end
       end
 
+      # merge grouping and sorting parameters
+      group_and_sort_params = (params[:group] || []) + (params[:sort] || [])
       # apply sorting if needed
-      (params[:sort] || []).each do |sort_params|
+      group_and_sort_params.each do |sort_params|
         assoc, method = sort_params["property"].split('__')
         dir = sort_params["direction"].try(:upcase) || 'ASC'
 
